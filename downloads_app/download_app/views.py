@@ -2,11 +2,12 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.static import serve
-from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.response import Response
 
 from download_app.forms import Form_File
 from download_app.models import FileUpload
+from download_app.serializers import FileUploadSerializer
 
 
 def index(request):
@@ -39,9 +40,14 @@ def url_view(request, file_uploads, file):
     return HttpResponse('Ups, Error!')
 
 
-class FileUploadAPIView(APIView):
-    def post(self, request):
-        return Response({'title': 'title'})
+class FileUploadListAPIView(ListAPIView):
+    serializer_class = FileUploadSerializer
 
-    def get(self, request):
-        return Response({'title': 'Hello'})
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        return FileUpload.objects.filter(pk=pk)
+
+
+class FileUploadCreateAPIView(CreateAPIView):
+    queryset = FileUpload.objects.all()
+    serializer_class = FileUploadSerializer
