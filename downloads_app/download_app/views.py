@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.static import serve
 from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 
 from download_app.forms import Form_File
 from download_app.models import FileUpload
@@ -40,7 +41,7 @@ def url_view(request, file_uploads, file):
     return HttpResponse('Ups, Error!')
 
 
-class FileUploadListAPIView(ListAPIView):
+class FileUploadListAPIView(ListAPIView, ModelViewSet):
     serializer_class = FileUploadSerializer
 
     def get_queryset(self):
@@ -48,6 +49,6 @@ class FileUploadListAPIView(ListAPIView):
         return FileUpload.objects.filter(pk=pk)
 
 
-class FileUploadCreateAPIView(CreateAPIView):
+class FileUploadCreateAPIView(CreateAPIView, ModelViewSet):
     queryset = FileUpload.objects.all()
     serializer_class = FileUploadSerializer
