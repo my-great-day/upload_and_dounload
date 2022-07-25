@@ -3,7 +3,6 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.static import serve
 from rest_framework.generics import ListAPIView, CreateAPIView
-from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from download_app.forms import Form_File
@@ -12,7 +11,7 @@ from download_app.serializers import FileUploadSerializer
 
 
 def index(request):
-    '''Главный окно и форма для добавлении файла в базу данних'''
+    """Главный окно и форма для добавлении файла в базу данних"""
     if request.method == 'POST':
         file = FileUpload(title=request.POST['title'], file=request.FILES['file_upload'])
         file.save()  # Запись в базу данних
@@ -23,13 +22,13 @@ def index(request):
 
 
 def url(request, file):
-    '''Просмотр ссилки'''
+    """Просмотр ссилки"""
     files = FileUpload.objects.get(id=file).file
     return render(request, 'url.html', {'id': files})
 
 
 def url_view(request, file_uploads, file):
-    '''Откритие или скачивание файла'''
+    """Откритие или скачивание файла"""
     path = f'{file_uploads}/{file}'
     document = get_object_or_404(FileUpload, file=path)
 
@@ -50,5 +49,6 @@ class FileUploadListAPIView(ListAPIView, ModelViewSet):
 
 
 class FileUploadCreateAPIView(CreateAPIView, ModelViewSet):
+    """Откритие или скачивание файла"""
     queryset = FileUpload.objects.all()
-    serializer_class = FileUploadSerializer
+    serializer_class = FileUploadSerializer(queryset, many=True)
