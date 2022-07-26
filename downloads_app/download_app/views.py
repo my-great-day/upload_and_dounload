@@ -51,4 +51,4 @@ class FileUploadListAPIView(ListAPIView, ModelViewSet):
 class FileUploadCreateAPIView(CreateAPIView, ModelViewSet):
     """Откритие или скачивание файла"""
     queryset = FileUpload.objects.all()
-    serializer_class = FileUploadSerializer(queryset, many=True)
+    serializer_class = FileUploadSerializer
