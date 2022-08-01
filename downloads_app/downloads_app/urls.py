@@ -5,9 +5,7 @@ from rest_framework import routers
 from download_app import views
 
 router = routers.DefaultRouter()
-router.register(r'looking_the_file/<pk>', views.FileUploadListAPIView, basename='FileUploadList')
-router.register(r'create_the_file', views.FileUploadCreateAPIView, basename='FileUploadCreate')
-
+router.register(r'create_the_file', views.FileUploadCreateAPIView, basename='create_the_file')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

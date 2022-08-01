@@ -4,11 +4,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
 from django.views.static import serve
 from rest_framework.generics import ListAPIView, CreateAPIView
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.mixins import ListModelMixin
+from rest_framework.viewsets import ModelViewSet, ViewSet
 
 from download_app.forms import Form_File
 from download_app.models import FileUpload
-from download_app.serializers import FileUploadUpSerializer, FileUploadDownSerializer
+from download_app.serializers import FileUploadUpSerializer, FileUploadDownSerializer, FileUploadSerializer
 
 
 @csrf_protect
@@ -25,6 +26,7 @@ def index(request):
     except:
         form = Form_File()
         return render(request, 'index.html')
+
 
 def url(request, file):
     """Просмотр ссилки"""
@@ -45,15 +47,7 @@ def url_view(request, file_uploads, file):
     return HttpResponse('Ups, Error!')
 
 
-class FileUploadListAPIView(ListAPIView, ModelViewSet):
-    serializer_class = FileUploadDownSerializer
-
-    def get_queryset(self):
-        pk = self.kwargs['pk']
-        return FileUpload.objects.filter(pk=pk)
-
-
-class FileUploadCreateAPIView(CreateAPIView, ModelViewSet):
+class FileUploadCreateAPIView(CreateAPIView, ViewSet):
     """Откритие или скачивание файла"""
-    queryset = FileUpload.objects.all()
+    queryset = FileUpload
     serializer_class = FileUploadUpSerializer
